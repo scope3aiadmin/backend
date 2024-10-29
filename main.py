@@ -16,7 +16,7 @@ config.bind = ["localhost:8000"]
 
 
 class ImageOCR(BaseModel):
-    base64_string: str
+    image: str
     language: str
 
 
@@ -41,7 +41,7 @@ class RankingBody(BaseModel):
 @app.post("/ocr")
 async def ocr(image: ImageOCR):
     reader = easyocr.Reader([image.language], gpu=False)
-    image_data = base64.b64decode(str(image.base64_string))
+    image_data = base64.b64decode(str(image.image))
     image_to_extract = Image.open(io.BytesIO(image_data))
     result = reader.readtext(image_to_extract)
     json_result = list(
